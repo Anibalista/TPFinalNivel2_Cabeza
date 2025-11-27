@@ -11,7 +11,7 @@ namespace Negocio
     public class CategoriasNegocio
     {
         //Abro la instancia de acceso a datos
-        private Acceso acceso = new Acceso();
+        private AccesoDatos acceso = new AccesoDatos();
 
         //Método para listar las categorías sin filtros
         public List<Categoria> Listar()

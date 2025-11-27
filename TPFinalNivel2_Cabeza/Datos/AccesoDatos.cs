@@ -6,17 +6,16 @@ using System.Data.SqlClient;
 //Uso comentarios para facilitar la lectura
 namespace Datos
 {
-    public class Acceso //Clase para manejar el acceso a datos (Consultas, Etc.)
+    public class AccesoDatos //Clase para manejar el acceso a datos (Consultas, Etc.)
     {
-        //Instancia de la clase Conexion para manejar la conexión a la base de datos
-        private Conexion conexion;
-        //Tambien el comando para poder setar las consultas con parámetros o usar SP más adelante
+        
+        private SqlConnection conexion;
         private SqlCommand comando;
 
-        //Constructor que inicializa la instancia de Conexion
-        public Acceso()
+        //Constructor que inicializa la instancia de Conexion Y Comando
+        public AccesoDatos()
         {
-            conexion = new Conexion();
+            conexion = new SqlConnection("server=.\\SQLEXPRESS; database=CATALOGO_DB; integrated security=true");
             comando = new SqlCommand();
         }
 
@@ -35,14 +34,12 @@ namespace Datos
         public DataTable EjecutarConsulta()
         {
             //Creo la conexión y la abro
-            SqlConnection connection = null;
+            comando.Connection = conexion;
             try
             {
-                connection = conexion.GetConnection();
-                comando.Connection = connection;
-                connection.Open();
-
                 SqlDataAdapter adapter = new SqlDataAdapter(comando);
+                conexion.Open();
+
                 DataTable tabla = new DataTable();
                 adapter.Fill(tabla);
                 return tabla;
@@ -55,9 +52,9 @@ namespace Datos
             } finally
             {
                 //Cierro la conexión si está abierta
-                if (connection != null && connection.State == ConnectionState.Open)
+                if (conexion != null && conexion.State == ConnectionState.Open)
                 {
-                    connection.Close();
+                    conexion.Close();
                 }
                 comando.Parameters.Clear(); //Limpio los parámetros para la próxima consulta
             }
@@ -67,12 +64,10 @@ namespace Datos
         /// (el intelisense es impresionante me adivina lo que quiero desde el ejemplo de arriba jaja)
         public int EjecutarComando()
         {
-            SqlConnection connection = null;
+            comando.Connection = conexion;
             try
             {
-                connection = conexion.GetConnection();
-                comando.Connection = connection;
-                connection.Open();
+                conexion.Open();
 
                 //Devuelvo cuantas tablas fueron afectadas
                 return comando.ExecuteNonQuery();
@@ -84,9 +79,9 @@ namespace Datos
             }
             finally
             {
-                if (connection != null && connection.State == ConnectionState.Open)
+                if (conexion != null && conexion.State == ConnectionState.Open)
                 {
-                    connection.Close();
+                    conexion.Close();
                 }
                 comando.Parameters.Clear();
             }
