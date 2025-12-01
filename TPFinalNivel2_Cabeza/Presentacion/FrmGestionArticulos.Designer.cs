@@ -146,6 +146,7 @@
             this.dataGridArticulos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
             this.dataGridArticulos.Size = new System.Drawing.Size(618, 462);
             this.dataGridArticulos.TabIndex = 1;
+            this.dataGridArticulos.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridArticulos_CellFormatting);
             this.dataGridArticulos.SelectionChanged += new System.EventHandler(this.dataGridArticulos_SelectionChanged);
             // 
             // picBoxImagen
@@ -359,6 +360,7 @@
             this.Controls.Add(this.groupBoxBotones);
             this.MinimumSize = new System.Drawing.Size(938, 661);
             this.Name = "FrmGestionArticulos";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Gestión de Artículos";
             this.Load += new System.EventHandler(this.FrmGestionArticulos_Load);
             this.groupBoxBotones.ResumeLayout(false);

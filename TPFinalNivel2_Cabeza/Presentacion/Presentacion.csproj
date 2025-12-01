@@ -34,6 +34,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -46,14 +47,25 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="IconosImagenes.cs" />
+    <Compile Include="FrmEditArticulos.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmEditArticulos.Designer.cs">
+      <DependentUpon>FrmEditArticulos.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmGestionArticulos.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmGestionArticulos.Designer.cs">
       <DependentUpon>FrmGestionArticulos.cs</DependentUpon>
     </Compile>
+    <Compile Include="HelperImagenes.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FrmEditArticulos.resx">
+      <DependentUpon>FrmEditArticulos.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmGestionArticulos.resx">
       <DependentUpon>FrmGestionArticulos.cs</DependentUpon>
     </EmbeddedResource>
@@ -88,6 +100,18 @@
       <Project>{ee2f6973-8e90-424e-b53d-29d27d447229}</Project>
       <Name>Negocio</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="imagenes\icono_error.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="imagenes\Imagen_no_encontrada_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="imagenes\Sin_Imagen_Logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

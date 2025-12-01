@@ -62,16 +62,13 @@ namespace Datos
 
         //Método para ejecutar comandos INSERT, UPDATE, DELETE
         /// (el intelisense es impresionante me adivina lo que quiero desde el ejemplo de arriba jaja)
-        public int EjecutarComando()
+        public void EjecutarComando()
         {
             comando.Connection = conexion;
             try
             {
                 conexion.Open();
-
-                //Devuelvo cuantas tablas fueron afectadas
-                return comando.ExecuteNonQuery();
-
+                comando.ExecuteNonQuery();
             }
             catch (Exception ex)
             {

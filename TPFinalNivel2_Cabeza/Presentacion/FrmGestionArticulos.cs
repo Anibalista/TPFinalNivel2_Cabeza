@@ -17,6 +17,7 @@ namespace Presentacion
         private bool cerrando = false;
         private bool cargando = true;
         private List<Articulo> listaArticulos;
+        private Articulo seleccionado;
 
         public FrmGestionArticulos()
         {
@@ -46,17 +47,43 @@ namespace Presentacion
 
         private void btnInsertar_Click(object sender, EventArgs e)
         {
-
+            FrmEditArticulos agregar = new FrmEditArticulos();
+            agregar.ShowDialog();
+            Cargar();
         }
 
         private void btnModificar_Click(object sender, EventArgs e)
         {
-
+            if (seleccionado == null)
+                return;
+            DialogResult respuesta = MessageBox.Show($"¿Desea modificar el articulo {seleccionado.Nombre}?", "Confirmar modificación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (respuesta == DialogResult.Yes)
+            {
+                FrmEditArticulos modificar = new FrmEditArticulos();
+                modificar.setArticulo(seleccionado);
+                modificar.ShowDialog();
+                seleccionado = null;
+                Cargar();
+            }
         }
 
         private void btnConsultar_Click(object sender, EventArgs e)
         {
-
+            if (seleccionado == null)
+                return;
+            try
+            {
+                FrmEditArticulos consultar = new FrmEditArticulos();
+                consultar.setArticulo(seleccionado);
+                consultar.setModoConsulta();
+                consultar.ShowDialog();
+                seleccionado = null;
+                Cargar();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al abrir el formulario de consulta. \n" + ex.Message);
+            }
         }
 
         private void btnEliminar_Click(object sender, EventArgs e)
@@ -87,6 +114,20 @@ namespace Presentacion
         {
             if (cerrando)
                 return;
+            seleccionado = null;
+            if (dataGridArticulos.Rows.Count == 0)
+                return;
+            try
+            {
+                if (dataGridArticulos.CurrentRow != null)
+                {
+                    seleccionado = (Articulo)dataGridArticulos.CurrentRow.DataBoundItem;
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al seleccionar el artículo. \n" + ex.Message);
+            }
         }
 
         //Eventos de los Combos de Búsqueda Avanzada
@@ -121,8 +162,9 @@ namespace Presentacion
                 ArticulosNegocio negocio = new ArticulosNegocio();
                 listaArticulos = negocio.Listar();
                 dataGridArticulos.DataSource = listaArticulos;
-
                 ocultarColumnas("Id");
+                dataGridArticulos.Columns["Precio"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                dataGridArticulos.Columns["Precio"].SortMode = DataGridViewColumnSortMode.Automatic;
             }
             catch (Exception ex)
             {
@@ -138,7 +180,6 @@ namespace Presentacion
                 MarcasNegocio negocio = new MarcasNegocio();
                 listaMarcas = negocio.Listar();
 
-                cbMarca.Items.Clear();
                 cbMarca.DataSource = null;
                 cbMarca.DataSource = listaMarcas;
                 cbMarca.ValueMember = "Id";
@@ -159,7 +200,6 @@ namespace Presentacion
                 CategoriasNegocio negocio = new CategoriasNegocio();
                 listaCategorias = negocio.Listar();
 
-                cbCategoria.Items.Clear();
                 cbCategoria.DataSource = null;
                 cbCategoria.DataSource = listaCategorias;
                 cbCategoria.ValueMember = "Id";
@@ -179,7 +219,7 @@ namespace Presentacion
             List<string> listaCampos = new List<string>() { "Precio", "Nombre", "Descripción", "Código Artículo" };
             try
             {
-                cbCampo.Items.Clear();
+                cbCampo.DataSource = null;
                 cbCampo.DataSource = listaCampos;
                 cbCampo.SelectedIndex = -1;
             }
@@ -226,6 +266,22 @@ namespace Presentacion
             }
         }
 
+        //Consultado por IA para darle formato de pesos argentinos a la columna precio
+        private void dataGridArticulos_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            if (cerrando) return;
+
+            if (dataGridArticulos.Columns[e.ColumnIndex].Name == "Precio" && e.Value != null)
+            {
+                if (decimal.TryParse(e.Value.ToString(), out decimal precio))
+                {
+                    // Formato argentino: símbolo pesos y 2 decimales
+                    e.Value = precio.ToString("C2", new System.Globalization.CultureInfo("es-AR"));
+                    e.FormattingApplied = true;
+                }
+            }
+        }
+
         //Métodos de Filtrado
         private void Filtrar()
         {
@@ -243,10 +299,6 @@ namespace Presentacion
             return true;
         }
 
-        private bool SeleccionoArticulo()
-        {
-            return true;
-        }
 
         private void txtFiltroAvanzado_KeyPress(object sender, KeyPressEventArgs e)
         {
@@ -267,7 +319,14 @@ namespace Presentacion
 
         private void ocultarColumnas(string columna)
         {
-            dataGridArticulos.Columns[columna].Visible = false;
+            try
+            {
+                dataGridArticulos.Columns[columna].Visible = false;
+            } catch (Exception ex)
+            {
+                throw ex;
+            }
+
         }
         private void CerrarFormulario()
         {
