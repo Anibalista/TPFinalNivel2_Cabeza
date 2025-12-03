@@ -64,7 +64,7 @@ namespace Negocio
                 {
                     Articulo aux = new Articulo();
                     aux.Id = (int)acceso.Lector["Id"];
-                    aux.Codigo = (string)acceso.Lector["Codigo"];
+                    aux.Codigo = acceso.Lector["Codigo"].ToString().ToUpper();
                     aux.Nombre = (string)acceso.Lector["Nombre"];
                     aux.Descripcion = (string)acceso.Lector["Descripcion"];
                     aux.Precio = (decimal)acceso.Lector["Precio"];

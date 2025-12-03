@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using Dominio;
 using Negocio;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
 namespace Presentacion
 {
@@ -46,11 +47,6 @@ namespace Presentacion
 
         private void btnInsertar_Click(object sender, EventArgs e)
         {
-            if (picBoxImagen.Image != null)
-            {
-                picBoxImagen.Dispose();
-                picBoxImagen.Image = null;
-            }
             FrmEditArticulos agregar = new FrmEditArticulos();
             agregar.ShowDialog();
             Cargar();
@@ -87,6 +83,7 @@ namespace Presentacion
                 consultar.setModoConsulta();
                 consultar.ShowDialog();
                 seleccionado = null;
+                picBoxImagen.Image = Image.FromFile(HelperImagenes.ObtenerImagenSeleccionada(""));
                 Cargar();
             }
             catch (Exception ex)
@@ -173,9 +170,11 @@ namespace Presentacion
 
         private void cargarImagen()
         {
+            string rutaAMostrar = seleccionado?.ImagenUrl;
+            string urlImagen = rutaAMostrar;
             try
             {
-                string urlImagen = HelperImagenes.ObtenerImagenSeleccionada(seleccionado.ImagenUrl);
+                urlImagen = HelperImagenes.ObtenerImagenSeleccionada(seleccionado.ImagenUrl);
 
                 if (urlImagen.StartsWith("http")) 
                 {
@@ -184,10 +183,20 @@ namespace Presentacion
                 {
                     HelperImagenes.CargarImagenSinLock(picBoxImagen, urlImagen);
                 }
+                if (string.IsNullOrWhiteSpace(rutaAMostrar))
+                {
+                    rutaAMostrar = "El artículo no tiene imagen asignada";
+                } else if (rutaAMostrar != urlImagen)
+                {
+                    rutaAMostrar = "No se encuentra la imagen en el ordenador revise la ruta\n" + rutaAMostrar;
+                }
 
             }
             catch (Exception ex)
             {
+                if (rutaAMostrar.StartsWith("http"))
+                    rutaAMostrar = "Error al traer la imagen desde el servidor, revise el enlace\n" + urlImagen;
+
                 try
                 {
                     HelperImagenes.CargarImagenSinLock(picBoxImagen, IconosImagenes.ImagenesPorDefecto["ImagenError"]);
@@ -197,6 +206,10 @@ namespace Presentacion
                     picBoxImagen.Image = null;
                     MessageBox.Show("Error en el cuadro de imágenes. \n" + ex.Message);
                 }
+            } finally
+            {
+                lblRutaImagen.Text = rutaAMostrar;
+                lblRutaImagen.MaximumSize = new Size(picBoxImagen.Width, 0);
             }
         }
 
@@ -230,8 +243,8 @@ namespace Presentacion
             {
                 dataGridArticulos.DataSource = listaArticulos;
                 ocultarColumnas("Id");
-                dataGridArticulos.Columns["Precio"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
-                dataGridArticulos.Columns["Precio"].SortMode = DataGridViewColumnSortMode.Automatic;
+                ocultarColumnas("ImagenUrl");
+                fotmatearColumnas();
             }
             catch (Exception ex)
             {
@@ -364,6 +377,53 @@ namespace Presentacion
                 }
             }
         }
+
+        //Configuracion de la estética de la grilla (puedo hacerlo en configuración aparte pero solo hay una grilla)
+        private void fotmatearColumnas()
+        {
+            if (cerrando)
+                return;
+            if (dataGridArticulos == null)
+                return;
+            try
+            {
+                if (dataGridArticulos.Rows.Count < 1)
+                {
+                    return;
+                }
+                foreach (DataGridViewColumn columna in dataGridArticulos.Columns)
+                {
+                    columna.HeaderCell.Style.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                    columna.MinimumWidth = 80;
+                    if (columna.Name == "Codigo")
+                    {
+                        columna.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+                        columna.FillWeight = 10;
+                    }
+                    else if (columna.Name == "Nombre")
+                    {
+                        columna.FillWeight = 15;
+                    }
+                    else if (columna.Name == "Descripcion")
+                    {
+                        columna.FillWeight = 30;
+                    }
+                    else if (columna.Name == "Precio")
+                    {
+                        columna.FillWeight = 15;
+                    }
+                    else
+                    {
+                        columna.FillWeight = 15;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error al formatear la grilla. \n" + ex.Message);
+            }
+        }
+
 
         //Métodos de Filtrado
         private void Filtrar()

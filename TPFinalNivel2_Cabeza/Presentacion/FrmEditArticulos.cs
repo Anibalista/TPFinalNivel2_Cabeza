@@ -305,7 +305,7 @@ namespace Presentacion
         {
             bool camposValidos = true;
             errorProviderCampos.Clear();
-            mensaje = "Por favor, corrija los errores antes de ontinuar\n";
+            mensaje = "Por favor, corrija los errores antes de continuar\n";
             //Código
             if (string.IsNullOrWhiteSpace(txtCodigo.Text))
             {
@@ -439,12 +439,13 @@ namespace Presentacion
             if (cerrando) return false;
             try
             {
-                if (articulo == null)
-                    return validarCodigoExistente(txtCodigo.Text.Trim());
+                string codigo = txtCodigo.Text.Trim().ToUpper();
+                if (articulo?.Id == 0)
+                    return validarCodigoExistente(codigo);
                 else
                 {
-                    if (articulo.Codigo != txtCodigo.Text.Trim().ToUpper())
-                        return validarCodigoExistente(txtCodigo.Text.Trim().ToUpper());
+                    if (articulo.Codigo != codigo)
+                        return validarCodigoExistente(codigo);
                     return false;
                 }
             }
@@ -464,13 +465,13 @@ namespace Presentacion
                 if (articulo == null)
                     articulo = new Articulo();
 
-                cargarDatosArticulo();
-
                 if (validarArticuloExistente())
                 {
                     mensaje = "El código del artículo ya existe. Por favor, ingrese un código diferente.";
                     return;
                 }
+
+                cargarDatosArticulo();
                 string imagen = txtImagen.Text.Trim();
                 if (!string.IsNullOrWhiteSpace(imagen))
                 {
