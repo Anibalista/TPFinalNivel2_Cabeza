@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -50,33 +51,79 @@ namespace Presentacion
 
         }
 
-        public static string CopiarImagenSeleccionada(string urlOrigen, string nombre)
+        public static string CopiarImagenSeleccionada(string urlOrigen, string nombre, string urlSecundaria = "")
         {
             try
             {
                 if (string.IsNullOrWhiteSpace(urlOrigen) || !File.Exists(urlOrigen))
                     return "";
+                //Lo quito porque no pude probar bien el tema de los locks
+                if (urlOrigen == urlSecundaria)
+                    return urlSecundaria; // La imagen ya es la misma (no se cambia)
+                
 
                 string carpetaDestino = ConfigurationManager.AppSettings["images-folder"];
                 Directory.CreateDirectory(carpetaDestino);
 
+
                 string extension = Path.GetExtension(urlOrigen);
                 string destino = Path.Combine(carpetaDestino, nombre + extension);
 
+                // Tuve muchos problemas con esta funcionalidad
+                // pero era porque la dejaba cargada en un PictureBox del frmGestion
                 //Esta parte me ayudé con IA (copilot) para evitar problemas de locks al copiar
-                //Mi idea es que si el usuairo le quiere cambiar la imagen del producto tambien la cambie en su carpeta
-                // Copiar con FileStream para evitar locks
-                using (var fsOrigen = new FileStream(urlOrigen, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
-                using (var fsDestino = new FileStream(destino, FileMode.Create, FileAccess.Write))
-                {
-                    fsOrigen.CopyTo(fsDestino);
-                }
+                //Mi idea es que si el usuario le quiere cambiar la imagen del producto
+                //tambien la cambie en su carpeta 
 
+                string[] extensionesPosibles = { ".jpg", ".jpeg", ".png", ".gif", ".bmp" };
+                foreach (var ext in extensionesPosibles)
+                {
+                    string posible = Path.Combine(carpetaDestino, nombre + ext);
+                    if (File.Exists(posible))
+                    {
+                        File.Delete(posible); // Eliminar la versión anterior
+                    }
+                }
+                File.Copy(urlOrigen, destino, true);
                 return destino;
             }
             catch
             {
                 throw;
+            }
+        }
+
+        public static void CargarImagenSinLock(PictureBox pb, string ruta)
+        {
+            if (pb.Image != null)
+            {
+                pb.Image.Dispose();
+                pb.Image = null;
+            }
+
+            using (var fs = new FileStream(ruta, FileMode.Open, FileAccess.Read))
+            using (var imgTemp = Image.FromStream(fs))
+            {
+                pb.Image = new Bitmap(imgTemp);
+            }
+        }
+
+        public static void EliminarImagen(string ruta)
+        {
+            if (string.IsNullOrWhiteSpace(ruta))
+                return;
+            if (ruta.StartsWith("http"))
+                return;
+            try
+            {
+                if (File.Exists(ruta))
+                {
+                    File.Delete(ruta);
+                }
+            }
+            catch (Exception)
+            {
+                throw new Exception("No se eliminó ninguna imagen.\nSi tenía una copia en el disco elimínela manualmente");
             }
         }
     }

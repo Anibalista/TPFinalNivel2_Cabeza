@@ -38,8 +38,8 @@
             this.picBoxImagen = new System.Windows.Forms.PictureBox();
             this.txtCodigo = new System.Windows.Forms.TextBox();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.lblDescipcion = new System.Windows.Forms.Label();
-            this.txtDescipcion = new System.Windows.Forms.TextBox();
+            this.lblNombre = new System.Windows.Forms.Label();
+            this.txtNombre = new System.Windows.Forms.TextBox();
             this.lblCodigo = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.cbCategoria = new System.Windows.Forms.ComboBox();
@@ -54,6 +54,7 @@
             this.lblValor = new System.Windows.Forms.Label();
             this.txtFiltroAvanzado = new System.Windows.Forms.TextBox();
             this.lblImagen = new System.Windows.Forms.Label();
+            this.btnLimpiarFiltro = new System.Windows.Forms.Button();
             this.groupBoxBotones.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridArticulos)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.picBoxImagen)).BeginInit();
@@ -72,7 +73,7 @@
             this.groupBoxBotones.Font = new System.Drawing.Font("Roboto Condensed", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBoxBotones.Location = new System.Drawing.Point(0, 536);
             this.groupBoxBotones.Name = "groupBoxBotones";
-            this.groupBoxBotones.Size = new System.Drawing.Size(922, 86);
+            this.groupBoxBotones.Size = new System.Drawing.Size(1067, 86);
             this.groupBoxBotones.TabIndex = 0;
             this.groupBoxBotones.TabStop = false;
             // 
@@ -101,7 +102,7 @@
             // btnSalir
             // 
             this.btnSalir.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSalir.Location = new System.Drawing.Point(745, 19);
+            this.btnSalir.Location = new System.Drawing.Point(890, 19);
             this.btnSalir.Name = "btnSalir";
             this.btnSalir.Size = new System.Drawing.Size(163, 56);
             this.btnSalir.TabIndex = 2;
@@ -133,9 +134,8 @@
             // 
             // dataGridArticulos
             // 
-            this.dataGridArticulos.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
+            this.dataGridArticulos.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
             this.dataGridArticulos.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dataGridArticulos.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridArticulos.EditMode = System.Windows.Forms.DataGridViewEditMode.EditProgrammatically;
@@ -144,17 +144,19 @@
             this.dataGridArticulos.Name = "dataGridArticulos";
             this.dataGridArticulos.RowHeadersVisible = false;
             this.dataGridArticulos.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dataGridArticulos.Size = new System.Drawing.Size(618, 462);
+            this.dataGridArticulos.Size = new System.Drawing.Size(694, 462);
             this.dataGridArticulos.TabIndex = 1;
-            this.dataGridArticulos.CellFormatting += new System.Windows.Forms.DataGridViewCellFormattingEventHandler(this.dataGridArticulos_CellFormatting);
             this.dataGridArticulos.SelectionChanged += new System.EventHandler(this.dataGridArticulos_SelectionChanged);
             // 
             // picBoxImagen
             // 
-            this.picBoxImagen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.picBoxImagen.Location = new System.Drawing.Point(630, 316);
+            this.picBoxImagen.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.picBoxImagen.Location = new System.Drawing.Point(703, 316);
             this.picBoxImagen.Name = "picBoxImagen";
-            this.picBoxImagen.Size = new System.Drawing.Size(280, 214);
+            this.picBoxImagen.Size = new System.Drawing.Size(364, 214);
+            this.picBoxImagen.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             this.picBoxImagen.TabIndex = 2;
             this.picBoxImagen.TabStop = false;
             // 
@@ -168,38 +170,36 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.groupBox1.Controls.Add(this.lblDescipcion);
-            this.groupBox1.Controls.Add(this.txtDescipcion);
+            this.groupBox1.Controls.Add(this.lblNombre);
+            this.groupBox1.Controls.Add(this.txtNombre);
             this.groupBox1.Controls.Add(this.lblCodigo);
             this.groupBox1.Controls.Add(this.txtCodigo);
             this.groupBox1.Font = new System.Drawing.Font("Roboto Condensed", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.groupBox1.Location = new System.Drawing.Point(6, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(618, 50);
+            this.groupBox1.Size = new System.Drawing.Size(694, 50);
             this.groupBox1.TabIndex = 5;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Filtro Rápido";
             // 
-            // lblDescipcion
+            // lblNombre
             // 
-            this.lblDescipcion.AutoSize = true;
-            this.lblDescipcion.Location = new System.Drawing.Point(269, 20);
-            this.lblDescipcion.Name = "lblDescipcion";
-            this.lblDescipcion.Size = new System.Drawing.Size(88, 19);
-            this.lblDescipcion.TabIndex = 7;
-            this.lblDescipcion.Text = "Descripcion:";
+            this.lblNombre.AutoSize = true;
+            this.lblNombre.Location = new System.Drawing.Point(269, 20);
+            this.lblNombre.Name = "lblNombre";
+            this.lblNombre.Size = new System.Drawing.Size(64, 19);
+            this.lblNombre.TabIndex = 7;
+            this.lblNombre.Text = "Nombre:";
             // 
-            // txtDescipcion
+            // txtNombre
             // 
-            this.txtDescipcion.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.txtNombre.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtDescipcion.Location = new System.Drawing.Point(363, 17);
-            this.txtDescipcion.Name = "txtDescipcion";
-            this.txtDescipcion.Size = new System.Drawing.Size(249, 27);
-            this.txtDescipcion.TabIndex = 6;
-            this.txtDescipcion.TextChanged += new System.EventHandler(this.txtDescipcion_TextChanged);
+            this.txtNombre.Location = new System.Drawing.Point(339, 17);
+            this.txtNombre.Name = "txtNombre";
+            this.txtNombre.Size = new System.Drawing.Size(349, 27);
+            this.txtNombre.TabIndex = 6;
+            this.txtNombre.TextChanged += new System.EventHandler(this.txtDescipcion_TextChanged);
             // 
             // lblCodigo
             // 
@@ -212,7 +212,7 @@
             // 
             // groupBox2
             // 
-            this.groupBox2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.groupBox2.Controls.Add(this.btnLimpiarFiltro);
             this.groupBox2.Controls.Add(this.cbCategoria);
             this.groupBox2.Controls.Add(this.lblCategoria);
             this.groupBox2.Controls.Add(this.cbMarca);
@@ -225,9 +225,9 @@
             this.groupBox2.Controls.Add(this.lblValor);
             this.groupBox2.Controls.Add(this.txtFiltroAvanzado);
             this.groupBox2.Font = new System.Drawing.Font("Roboto Condensed", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.groupBox2.Location = new System.Drawing.Point(630, 13);
+            this.groupBox2.Location = new System.Drawing.Point(706, 13);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(280, 264);
+            this.groupBox2.Size = new System.Drawing.Size(349, 264);
             this.groupBox2.TabIndex = 6;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Búsqueda Avanzada";
@@ -238,7 +238,7 @@
             this.cbCategoria.FormattingEnabled = true;
             this.cbCategoria.Location = new System.Drawing.Point(90, 177);
             this.cbCategoria.Name = "cbCategoria";
-            this.cbCategoria.Size = new System.Drawing.Size(184, 27);
+            this.cbCategoria.Size = new System.Drawing.Size(253, 27);
             this.cbCategoria.TabIndex = 15;
             // 
             // lblCategoria
@@ -256,7 +256,7 @@
             this.cbMarca.FormattingEnabled = true;
             this.cbMarca.Location = new System.Drawing.Point(90, 137);
             this.cbMarca.Name = "cbMarca";
-            this.cbMarca.Size = new System.Drawing.Size(184, 27);
+            this.cbMarca.Size = new System.Drawing.Size(253, 27);
             this.cbMarca.TabIndex = 13;
             // 
             // lblMarca
@@ -275,7 +275,7 @@
             this.cbCriterio.FormattingEnabled = true;
             this.cbCriterio.Location = new System.Drawing.Point(90, 61);
             this.cbCriterio.Name = "cbCriterio";
-            this.cbCriterio.Size = new System.Drawing.Size(184, 27);
+            this.cbCriterio.Size = new System.Drawing.Size(253, 27);
             this.cbCriterio.TabIndex = 11;
             this.cbCriterio.SelectedIndexChanged += new System.EventHandler(this.cbCriterio_SelectedIndexChanged);
             // 
@@ -294,7 +294,7 @@
             this.cbCampo.FormattingEnabled = true;
             this.cbCampo.Location = new System.Drawing.Point(90, 23);
             this.cbCampo.Name = "cbCampo";
-            this.cbCampo.Size = new System.Drawing.Size(184, 27);
+            this.cbCampo.Size = new System.Drawing.Size(253, 27);
             this.cbCampo.TabIndex = 9;
             this.cbCampo.SelectedIndexChanged += new System.EventHandler(this.cbCampo_SelectedIndexChanged);
             // 
@@ -312,7 +312,7 @@
             this.btnBuscar.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.btnBuscar.Location = new System.Drawing.Point(6, 220);
             this.btnBuscar.Name = "btnBuscar";
-            this.btnBuscar.Size = new System.Drawing.Size(268, 38);
+            this.btnBuscar.Size = new System.Drawing.Size(157, 38);
             this.btnBuscar.TabIndex = 5;
             this.btnBuscar.Text = "Buscar en Catálogo";
             this.btnBuscar.UseVisualStyleBackColor = true;
@@ -332,26 +332,37 @@
             this.txtFiltroAvanzado.Enabled = false;
             this.txtFiltroAvanzado.Location = new System.Drawing.Point(90, 99);
             this.txtFiltroAvanzado.Name = "txtFiltroAvanzado";
-            this.txtFiltroAvanzado.Size = new System.Drawing.Size(184, 27);
+            this.txtFiltroAvanzado.Size = new System.Drawing.Size(253, 27);
             this.txtFiltroAvanzado.TabIndex = 6;
             this.txtFiltroAvanzado.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.txtFiltroAvanzado_KeyPress);
             // 
             // lblImagen
             // 
-            this.lblImagen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblImagen.Anchor = System.Windows.Forms.AnchorStyles.Top;
             this.lblImagen.AutoSize = true;
             this.lblImagen.Font = new System.Drawing.Font("Roboto Condensed", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblImagen.Location = new System.Drawing.Point(706, 294);
+            this.lblImagen.Location = new System.Drawing.Point(821, 294);
             this.lblImagen.Name = "lblImagen";
             this.lblImagen.Size = new System.Drawing.Size(132, 19);
             this.lblImagen.TabIndex = 7;
             this.lblImagen.Text = "Imagen de Artículo";
             // 
+            // btnLimpiarFiltro
+            // 
+            this.btnLimpiarFiltro.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnLimpiarFiltro.Location = new System.Drawing.Point(184, 220);
+            this.btnLimpiarFiltro.Name = "btnLimpiarFiltro";
+            this.btnLimpiarFiltro.Size = new System.Drawing.Size(157, 38);
+            this.btnLimpiarFiltro.TabIndex = 16;
+            this.btnLimpiarFiltro.Text = "Limpiar Filtro";
+            this.btnLimpiarFiltro.UseVisualStyleBackColor = true;
+            this.btnLimpiarFiltro.Click += new System.EventHandler(this.btnLimpiarFiltro_Click);
+            // 
             // FrmGestionArticulos
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(922, 622);
+            this.ClientSize = new System.Drawing.Size(1067, 622);
             this.Controls.Add(this.lblImagen);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
@@ -388,8 +399,8 @@
         private System.Windows.Forms.TextBox txtCodigo;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label lblCodigo;
-        private System.Windows.Forms.Label lblDescipcion;
-        private System.Windows.Forms.TextBox txtDescipcion;
+        private System.Windows.Forms.Label lblNombre;
+        private System.Windows.Forms.TextBox txtNombre;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label lblValor;
         private System.Windows.Forms.TextBox txtFiltroAvanzado;
@@ -403,6 +414,7 @@
         private System.Windows.Forms.Label lblCategoria;
         private System.Windows.Forms.ComboBox cbMarca;
         private System.Windows.Forms.Label lblMarca;
+        private System.Windows.Forms.Button btnLimpiarFiltro;
     }
 }
 

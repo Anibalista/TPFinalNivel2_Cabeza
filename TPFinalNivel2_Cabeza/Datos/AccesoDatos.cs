@@ -11,6 +11,12 @@ namespace Datos
         
         private SqlConnection conexion;
         private SqlCommand comando;
+        private SqlDataReader lector;
+
+        public SqlDataReader Lector
+        {
+            get { return lector; }
+        }
 
         //Constructor que inicializa la instancia de Conexion Y Comando
         public AccesoDatos()
@@ -26,37 +32,21 @@ namespace Datos
             comando.CommandType = tipo;
         }
 
-
-
-        /*Desde acá van los CRUDs y demás operaciones de acceso a datos
-         que van a devolver datatable para manejarlos desde la capa negocio*/
         //Consultas SELECT
-        public DataTable EjecutarConsulta()
+        public void EjecutarConsulta()
         {
             //Creo la conexión y la abro
             comando.Connection = conexion;
             try
             {
-                SqlDataAdapter adapter = new SqlDataAdapter(comando);
                 conexion.Open();
-
-                DataTable tabla = new DataTable();
-                adapter.Fill(tabla);
-                return tabla;
+                lector = comando.ExecuteReader();
 
             }
             catch (Exception ex)
             { 
                 //Capturo cualquier error y lo tiro a la capa superior para su manejo
                 throw new Exception("Error al ejecutar la consulta (Capa Datos). \n"+ex.Message);
-            } finally
-            {
-                //Cierro la conexión si está abierta
-                if (conexion != null && conexion.State == ConnectionState.Open)
-                {
-                    conexion.Close();
-                }
-                comando.Parameters.Clear(); //Limpio los parámetros para la próxima consulta
             }
         }
 
@@ -74,15 +64,21 @@ namespace Datos
             {
                 throw new Exception("Error al ejecutar el comando (Capa Datos). \n" + ex.Message);
             }
-            finally
+        }
+
+        //Cerrar la conexion
+        public void CerrarConexion()
+        {
+            if (lector != null && !lector.IsClosed)
             {
-                if (conexion != null && conexion.State == ConnectionState.Open)
-                {
-                    conexion.Close();
-                }
-                comando.Parameters.Clear();
+                lector.Close();
+            }
+            if (conexion != null && conexion.State == ConnectionState.Open)
+            {
+                conexion.Close();
             }
         }
+
 
         //Método para setear parámetros en el comando (para futuras implementaciones con SP)
         public void AgregarParametro(string clave, object valor)

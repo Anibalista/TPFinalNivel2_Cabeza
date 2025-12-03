@@ -23,15 +23,15 @@ namespace Negocio
                 //Seteo el comando para la consulta
                 acceso.SetComando("SELECT Id, Descripcion FROM MARCAS");
 
-                //Ejecuto la consulta y obtengo el datatable
-                var tabla = acceso.EjecutarConsulta();
+                //Ejecuto la consulta
+                acceso.EjecutarConsulta();
 
                 //Recorro las filas del datatable y las agrego a la lista
-                foreach (System.Data.DataRow row in tabla.Rows)
+                while (acceso.Lector.Read())
                 {
                     Marca aux = new Marca();
-                    aux.Id = (int)row["Id"];
-                    aux.Descripcion = row["Descripcion"].ToString();
+                    aux.Id = (int)acceso.Lector["Id"];
+                    aux.Descripcion = (string)acceso.Lector["Descripcion"];
 
                     lista.Add(aux);
                 }
@@ -42,6 +42,11 @@ namespace Negocio
             {
                 //Capturo cualquier error y lo tiro a la capa superior para su manejo (o a un archivo log con un helper)
                 throw new Exception("Error al listar marcas (Capa Negocio). \n" + ex.Message);
+            }
+            finally
+            {
+                //Cierro la conexión
+                acceso.Lector.Close();
             }
         }
     }

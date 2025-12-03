@@ -261,13 +261,8 @@ namespace Presentacion
                 {
                     //Acá me apoye en la IA para un método que me deje reemplazar la imagen si la quiere cambiar el usuario
                     // ya que Image.FromFile bloquea el archivo hasta que se cierra la aplicación igual que el Load
-                    using (var fs = new FileStream(ruta, FileMode.Open, FileAccess.Read))
-                    using (var imgTemp = Image.FromStream(fs))
-                    {
-                        // Clonamos para que no dependa del FileStream
-                        pictureBoxImagen.Image = new Bitmap(imgTemp);
-                    }
-
+                    HelperImagenes.CargarImagenSinLock(pictureBoxImagen, ruta);
+                    //No pude solucionarlo en la prueba así que lo dejo así por ahora
                 }
             }
             catch (Exception)
@@ -377,27 +372,38 @@ namespace Presentacion
             return camposValidos;
         }
 
-
+        private bool esImagenCopiable(string ruta)
+        {
+            if (cerrando) return false;
+            if (String.IsNullOrWhiteSpace(ruta))
+                return false;
+            if (ruta.StartsWith("http"))
+                return false;
+            return true;
+        }
 
         //método para copiar la imagen al disco
-        private string copiarImagenAlDisco(string rutaOriginal)
+        private string copiarImagenAlDisco(string ruta)
         {
-            if (cerrando) return string.Empty;
-            if (String.IsNullOrWhiteSpace(articulo.ImagenUrl))
-                return string.Empty;
-            if (articulo.ImagenUrl.StartsWith("http"))
-                return articulo.ImagenUrl;
+            if (!esImagenCopiable(ruta))
+                return ruta;
             DialogResult respuesta = MessageBox.Show("¿Desea copiar la imagen al disco local? (si ya existe no se duplicará aun si confirma)", "Copiar Imagen", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (respuesta == DialogResult.No)
                 return articulo.ImagenUrl;
             try
             {
-                string nuevaRuta = HelperImagenes.CopiarImagenSeleccionada(articulo.ImagenUrl, "img_" + articulo.Codigo);
+                if (pictureBoxImagen.Image != null)
+                {
+                    pictureBoxImagen.Image.Dispose();
+                    pictureBoxImagen.Image = null;
+                }
+                string nuevaRuta = HelperImagenes.CopiarImagenSeleccionada(ruta, "img_" + articulo.Codigo, articulo.ImagenUrl);
                 return nuevaRuta;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                MessageBox.Show("Error al copiar la imagen al disco \n" + ex.ToString());
+                MessageBox.Show("Error al copiar la imagen al disco NO SE COPIARÁ!\nIntente borrar la imagen anterior en la carpeta C:CatalogoArticulos");
+                articulo.ImagenUrl = ruta;
                 return string.Empty;
             }
         }
@@ -418,7 +424,6 @@ namespace Presentacion
                 articulo.Nombre = txtNombre.Text.Trim();
                 articulo.Descripcion = txtDescripcion.Text.Trim();
                 articulo.Precio = decimal.Parse(txtPrecio.Text.Trim());
-                articulo.ImagenUrl = txtImagen.Text.Trim();
                 articulo.Categoria = (Categoria)cbCategoria.SelectedItem;
                 articulo.Marca = (Marca)cbMarca.SelectedItem;
             }
@@ -466,12 +471,14 @@ namespace Presentacion
                     mensaje = "El código del artículo ya existe. Por favor, ingrese un código diferente.";
                     return;
                 }
-                if (!string.IsNullOrWhiteSpace(articulo.ImagenUrl))
+                string imagen = txtImagen.Text.Trim();
+                if (!string.IsNullOrWhiteSpace(imagen))
                 {
-                    string nuevaRuta = copiarImagenAlDisco(articulo.ImagenUrl);
+                    string nuevaRuta = copiarImagenAlDisco(imagen);
                     if (!string.IsNullOrWhiteSpace(nuevaRuta))
                         articulo.ImagenUrl = nuevaRuta;
                 }
+
                 negocio.Agregar(articulo);
                 
             }
@@ -493,9 +500,10 @@ namespace Presentacion
                     return;
                 }
                 cargarDatosArticulo();
-                if (!string.IsNullOrWhiteSpace(articulo.ImagenUrl))
+                string imagen = txtImagen.Text.Trim();
+                if (!string.IsNullOrWhiteSpace(imagen))
                 {
-                    string nuevaRuta = copiarImagenAlDisco(articulo.ImagenUrl);
+                    string nuevaRuta = copiarImagenAlDisco(imagen);
                     if (!string.IsNullOrWhiteSpace(nuevaRuta))
                         articulo.ImagenUrl = nuevaRuta;
                 }
